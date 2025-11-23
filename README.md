@@ -1,243 +1,82 @@
-Virtual Girlfriend
-This project is a “digital human” / virtual girlfriend that can see, hear and talk to you in real time. It combines an LLM-powered brain, a 3D avatar frontend, an audio pipeline with OpenAI Whisper, ElevenLabs, and a local Chatterbox TTS API for fast, expressive speech.
+# AI Interviewer with Custom Avatar and Malpractice Detection
 
-Demo & Media
-This section collects all available demo videos and images referenced in the codebase.
+This project is a sophisticated AI-powered interviewer that leverages a custom 3D avatar to create a realistic and interactive experience. It incorporates advanced features, including a malpractice detection system, to ensure the integrity of the interview process. The application is built with a modern tech stack, featuring a React frontend, a Node.js backend, and a custom text-to-speech (TTS) service.
 
-Main Demo Video
-Virtual avatar demo (GitHub asset):
-https://github.com/asanchezyali/talking-avatar-with-ai/assets/29262782/da316db9-6dd1-4475-9fe5-39dafbeb3cc4
-You can embed it in Markdown (for GitHub) like this:
+## Key Features
 
-https://github.com/asanchezyali/talking-avatar-with-ai/assets/29262782/da316db9-6dd1-4475-9fe5-39dafbeb3cc4
-System Architecture Diagram
-Full architecture SVG:
-![System Architecture](resources/architecture.drawio.svg)
-Open WebUI Integration Screenshot
-Screenshot demonstrating Chatterbox TTS integration with Open WebUI:
-![Open WebUI Chatterbox TTS Settings](https://lm17s1uz51.ufs.sh/f/EsgO8cDHBTOUjUe3QjHytHQ0xqn2CishmXgGfeJ4o983TUMO)
-High-Level Architecture
-The project is composed of three main layers working together.
+*   **Custom 3D Avatar:** Integrate your own custom avatar from Avaturn to create a personalized and engaging interview experience.
+*   **AI-Powered Interviewer:** The AI interviewer is powered by OpenAI's GPT-3, enabling it to ask relevant questions and generate insightful responses.
+*   **Malpractice Detection:** The system can detect various forms of malpractice, such as the presence of multiple people, mobile phone usage, and the user looking away from the screen.
+*   **Voice Cloning:** The custom TTS service, `chatterbox-tts-api`, allows you to clone your own voice for a more personalized interaction.
+*   **Lip-Sync:** The avatar's lip movements are synchronized with the audio using Rhubarb Lip Sync, enhancing the realism of the conversation.
 
-Frontend: React-based UI rendering the 3D avatar and handling user interaction.
-Backend (apps/backend): Node-based API that talks to OpenAI, ElevenLabs, Rhubarb Lip Sync and the local TTS service.
-Local TTS Service (chatterbox-tts-api): A FastAPI app that exposes OpenAI‑compatible TTS endpoints and is used by the backend for low-latency speech.
-The backend’s Chatterbox integration lives in:
+## Avaturn Integration
 
-// apps/backend/modules/chatter-box.mjs
-const chatterBoxUrl = "http://127.0.0.1:4123/v1/audio/speech/upload";
-const voiceSamplePath = path.join(
-  process.cwd(),
-  "././chatterbox-tts-api/voice-sample.mp3"
-);
-Features
-This section summarizes the capabilities exposed by the combined system.
+To create and use your own custom avatar, follow these steps:
 
-Conversational Brain
-Uses an OpenAI chat model configured via a prompt that drives avatar personality, facial expressions, and animation cues.
+1.  **Create your avatar:** Go to the [Avaturn website](https://avaturn.me/) and follow the instructions to create your personalized 3D avatar.
+2.  **Download the avatar:** Once you're satisfied with your avatar, download the `.glb` file.
+3.  **Add the avatar to the project:** Place the downloaded `.glb` file in the `apps/frontend/public/` directory.
+4.  **Update the avatar path:** In the `apps/frontend/src/components/Avatar.jsx` file, update the path to your new avatar file.
 
-Text‑to‑Speech (TTS) with Voice Cloning
+## Malpractice Detection
 
-Local Chatterbox TTS API with OpenAI‑compatible endpoints (/v1/audio/speech, /v1/audio/speech/upload).
-Uses voice-sample.mp3 for conditioning, enabling a consistent avatar voice.
-Multilingual Support (TTS Layer)
+The malpractice detection system is designed to ensure the integrity of the interview process by identifying and flagging suspicious behavior. The system uses a combination of computer vision and machine learning technologies to monitor the user's activity during the interview.
 
-/languages to list supported languages.
-/voices to upload voices with language metadata.
-/v1/audio/speech and /v1/audio/speech/stream that auto‑detect language from voice metadata.
-Rich Monitoring & Tools (TTS Layer)
+### Detected Malpractices
 
-Health check at /health.
-Memory monitoring endpoints and a React dashboard for memory usage.
-Requirements
-You need these tools and accounts before running the full stack.
+*   **Multiple People:** The system can detect the presence of more than one person in the camera's field of view.
+*   **Mobile Phone Usage:** The system can identify when a user is holding or looking at a mobile phone.
+*   **Looking Away:** The system can track the user's gaze and detect when they are looking away from the screen for an extended period.
 
-Accounts / API keys (for apps/backend/.env):
+### Technologies Used
 
-OpenAI API key (OPENAI_API_KEY and model name).
-ElevenLabs API key, voice ID, and model ID.
-System Tools
+*   **TensorFlow.js:** A library for machine learning in JavaScript, used for object detection and other computer vision tasks.
+*   **face-api.js:** A JavaScript API for face detection and face recognition in the browser.
+*   **MediaPipe:** A cross-platform, customizable machine learning solutions for live and streaming media.
 
-Node.js and Yarn for the monorepo frontend/backend.
-Python 3.11 for Chatterbox TTS API.
-ffmpeg installed on your OS.
-Rhubarb Lip Sync binaries placed in a /bin folder for lip‑sync generation (backend uses its output).
-Repository Layout
-The key directories used by this project are:
+## Getting Started
 
-chatterbox-tts-api/     # Local TTS FastAPI service (subproject)
-  app/
-  docs/
-  docker/
-  tests/
-  main.py
-  start.py
+### Prerequisites
 
-apps/
-  backend/              # Node backend integrating LLM, TTS, lip-sync, etc.
-    modules/
-      chatter-box.mjs   # Uses local Chatterbox TTS API
+*   **Node.js and yarn:** Make sure you have Node.js and yarn installed on your system.
+*   **Python:** The `chatterbox-tts-api` requires Python 3.9 or higher.
+*   **Rhubarb Lip-Sync:** Download the latest version of Rhubarb Lip-Sync from the [official repository](https://github.com/DanielSWolf/rhubarb-lip-sync/releases). Create a `/bin` directory in the `apps/backend` folder and place the contents of the unzipped file there.
+*   **ffmpeg:** Install ffmpeg on your system. You can find instructions for your operating system [here](https://ffmpeg.org/download.html).
 
-frontend/               # React avatar UI (served via Docker in TTS subproject or monorepo tooling)
-1. Setting Up the Chatterbox TTS API
-The virtual girlfriend relies on the local Chatterbox TTS API running at http://127.0.0.1:4123.
+### Installation
 
-You can run it either via Docker (recommended) or directly with Python.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/asanchezyali/talking-avatar-with-ai.git
+    cd talking-avatar-with-ai
+    ```
+2.  **Install dependencies:**
+    ```bash
+    yarn
+    ```
+3.  **Set up the chatterbox-tts-api:**
+    ```bash
+    cd chatterbox-tts-api
+    pip install -r requirements.txt
+    cd ..
+    ```
+4.  **Create a `.env` file:** In the `apps/backend` directory, create a `.env` file and add the following environment variables:
+    ```
+    # OPENAI
+    OPENAI_MODEL=<YOUR_GPT_MODEL>
+    OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
+    ```
+5.  **Run the application:**
+    ```bash
+    yarn dev
+    ```
+    This will start the frontend and backend servers. The frontend will be available at `http://localhost:5173`.
 
-1.1. Quick Start with Docker (Recommended)
-From the chatterbox-tts-api directory:
+## System Architecture
 
-cd chatterbox-tts-api
+The following diagram illustrates the architecture of the AI interviewer system:
 
-# Copy Docker-specific or local env template
-cp .env.example.docker .env      # Docker-focused defaults
-# or
-cp .env.example .env             # Local paths, then edit manually
-Choose a deployment variant:
-
-# Standard (pip-based)
-docker compose -f docker/docker-compose.yml up -d
-
-# uv-optimized
-docker compose -f docker/docker-compose.uv.yml up -d
-
-# GPU variants
-docker compose -f docker/docker-compose.gpu.yml up -d
-docker compose -f docker/docker-compose.uv.gpu.yml up -d
-
-# CPU-only
-docker compose -f docker/docker-compose.cpu.yml up -d
-Check logs and test:
-
-# Watch service logs
-docker logs chatterbox-tts-api -f
-
-# Simple test: generate audio
-curl -X POST http://localhost:4123/v1/audio/speech \
-  -H "Content-Type: application/json" \
-  -d '{"input": "Hello from Chatterbox TTS!"}' \
-  --output test.wav
-1.2. Local Python Setup (No Docker)
-From chatterbox-tts-api:
-
-cd chatterbox-tts-api
-
-# Install dependencies with uv (preferred)
-uv sync
-# or with pip
-pip install -r requirements.txt
-Create .env from template:
-
-cp .env.example .env
-# then edit .env to adjust PORT, DEVICE, EXAGGERATION, etc.
-Run the API:
-
-# Development with auto-reload
-uvicorn app.main:app --host 0.0.0.0 --port 4123 --reload
-
-# Or use the helper script
-python start.py dev       # dev mode
-python start.py prod      # production mode
-python start.py fullstack # API + frontend via Docker
-Verify it is running:
-
-curl http://localhost:4123/health
-curl http://localhost:4123/openapi.json
-2. Setting Up the Digital Human / Virtual Girlfriend App
-These steps run the monorepo backend+frontend that talk to the TTS API.
-
-2.1. Clone and Install
-# From your workspace
-git clone <your-fork-or-repo-url> virtual-girlfriend
-cd virtual-girlfriend
-
-# Install all monorepo dependencies
-yarn
-2.2. Backend Environment Configuration
-Create an .env file in apps/backend/ with the necessary secrets:
-
-cd apps/backend
-
-cat > .env << 'EOF'
-# OpenAI
-OPENAI_MODEL=<YOUR_GPT_MODEL>
-OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
-
-# Eleven Labs
-ELEVEN_LABS_API_KEY=<YOUR_ELEVEN_LABS_API_KEY>
-ELVEN_LABS_VOICE_ID=<YOUR_ELEVEN_LABS_VOICE_ID>
-ELEVEN_LABS_MODEL_ID=<YOUR_ELEVEN_LABS_MODEL_ID>
-EOF
-Ensure the Chatterbox TTS API base URL and voice sample path used in apps/backend/modules/chatter-box.mjs are valid for your environment.
-
-2.3. Run the Development Stack
-From the project root:
-
-# Make sure Chatterbox TTS API is already running on port 4123
-# Then start the monorepo dev processes
-yarn dev
-Open the frontend in your browser:
-
-Default route: http://localhost:5173/
-Optional demo route (if implemented in your frontend): http://localhost:5173/demo
-3. Using the Local TTS API Directly
-You can hit the Chatterbox TTS endpoints yourself for testing or debugging.
-
-3.1. Basic JSON TTS Request
-curl -X POST http://localhost:4123/v1/audio/speech \
-  -H "Content-Type: application/json" \
-  -d '{"input": "Hello! This is using the default configured voice sample.", "exaggeration": 0.7}' \
-  --output test.wav
-3.2. Upload Endpoint with Optional Voice File
-curl -X POST http://localhost:4123/v1/audio/speech/upload \
-  -F "input=Hello! This is using the upload endpoint without a file." \
-  -F "exaggeration=0.6" \
-  -F "temperature=0.9" \
-  --output test_upload_default_voice.wav
-To upload a custom voice sample, point voice_file at voice-sample.mp3 or any WAV/MP3 file you prefer.
-
-4. Running Tests
-There are automated tests for the TTS subproject.
-
-4.1. From chatterbox-tts-api
-cd chatterbox-tts-api
-
-# Run API tests
-python tests/test_api.py
-# or
-uv run tests/test_api.py
-
-# Run memory tests
-python tests/test_memory.py
-You can also use the helper:
-
-python start.py test
-5. Troubleshooting
-Common issues are mostly related to the TTS service stack.
-
-Python / NumPy / PyTorch compatibility
-Pin Python to 3.11 for best compatibility.
-CUDA / GPU issues
-Use the GPU‑ or CPU‑specific Docker Compose files to ensure the correct PyTorch wheel is installed.
-Port conflicts
-Change the port used by the TTS API by editing PORT in .env and apps/backend/modules/chatter-box.mjs.
-If you still run into problems, check:
-
-chatterbox-tts-api/docs/README.md and API_README.md for more detailed TTS docs.
-Logs from docker logs chatterbox-tts-api or the local FastAPI process.
-6. Extending the Project
-You can extend the virtual girlfriend with new capabilities in multiple layers.
-
-Change Personality / Behavior
-Edit the OpenAI prompt and template that define the avatar’s persona and output JSON schema.
-
-Add New TTS or Languages
-Use the multilingual endpoints (/languages, /voices, /v1/audio/speech) and update frontend/backend to expose new language options.
-
-Enhance UI
-Modify React components in the frontend to add controls, visualizations, or additional avatar states.
-
-7. License and Credits
-The Chatterbox TTS API subproject is licensed under AGPLv3 and originates from travisvn/chatterbox-tts-api.
-The digital human design and tutorial are inspired by the original “Digital Human” article and repo referenced in the legacy README.
-Please review each upstream project’s license before reusing or redistributing components.
+<div align="center">
+  <img src="resources/architecture.drawio.svg" alt="System Architecture" width="100%">
+</div>
