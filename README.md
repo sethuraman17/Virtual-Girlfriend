@@ -33,7 +33,6 @@ The malpractice detection system is designed to ensure the integrity of the inte
 *   **Multiple People:** The system can detect the presence of more than one person in the camera's field of view.
 *   **Mobile Phone Usage:** The system can identify when a user is holding or looking at a mobile phone.
 *   **Looking Away:** The system can track the user's gaze and detect when they are looking away from the screen for an extended period.
-*   ![malpractise](https://github.com/user-attachments/assets/5718d993-cb49-4021-ae60-35385202bd46)
 
 ### Technologies Used
 
