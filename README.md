@@ -1,3 +1,7 @@
+# Intro Demo
+
+https://github.com/user-attachments/assets/967386d5-2002-4a84-bf7a-d823e589fcc0
+
 # AI Interviewer with Custom Avatar and Malpractice Detection
 
 This project is a sophisticated AI-powered interviewer that leverages a custom 3D avatar to create a realistic and interactive experience. It incorporates advanced features, including a malpractice detection system, to ensure the integrity of the interview process. The application is built with a modern tech stack, featuring a React frontend, a Node.js backend, and a custom text-to-speech (TTS) service.
