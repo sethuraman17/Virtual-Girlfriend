@@ -1,207 +1,82 @@
-https://github.com/asanchezyali/talking-avatar-with-ai/assets/29262782/da316db9-6dd1-4475-9fe5-39dafbeb3cc4
+# AI Interviewer with Custom Avatar and Malpractice Detection
 
-## Digital Human
+This project is a sophisticated AI-powered interviewer that leverages a custom 3D avatar to create a realistic and interactive experience. It incorporates advanced features, including a malpractice detection system, to ensure the integrity of the interview process. The application is built with a modern tech stack, featuring a React frontend, a Node.js backend, and a custom text-to-speech (TTS) service.
 
-This project is a digital human that can talk and listen to you. It uses OpenAI's GPT-3 to generate responses, OpenAI's
-Whisper to transcript the audio, Eleven Labs to generate voice and Rhubarb Lip Sync to generate the lip sync. The tutorial
-to understand all the details of the repository can be found at [Monadical](https://monadical.com/posts/build-a-digital-human-with-large-language-models.html).
+## Key Features
 
-I have made this Discord channel available: [Math & Code](https://discord.gg/gJ3vCgSWeh) to resolve doubts about the configurations of this project in development.
+*   **Custom 3D Avatar:** Integrate your own custom avatar from Avaturn to create a personalized and engaging interview experience.
+*   **AI-Powered Interviewer:** The AI interviewer is powered by OpenAI's GPT-3, enabling it to ask relevant questions and generate insightful responses.
+*   **Malpractice Detection:** The system can detect various forms of malpractice, such as the presence of multiple people, mobile phone usage, and the user looking away from the screen.
+*   **Voice Cloning:** The custom TTS service, `chatterbox-tts-api`, allows you to clone your own voice for a more personalized interaction.
+*   **Lip-Sync:** The avatar's lip movements are synchronized with the audio using Rhubarb Lip Sync, enhancing the realism of the conversation.
 
-The brain of this project is based on Open AI, where the avatar characteristics and the shape of the response are
-defined in the following code fragment:
+## Avaturn Integration
 
-```js
-import { ChatOpenAI } from "@langchain/openai";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { StructuredOutputParser } from "langchain/output_parsers";
-import { z } from "zod";
-import dotenv from "dotenv";
+To create and use your own custom avatar, follow these steps:
 
-dotenv.config();
+1.  **Create your avatar:** Go to the [Avaturn website](https://avaturn.me/) and follow the instructions to create your personalized 3D avatar.
+2.  **Download the avatar:** Once you're satisfied with your avatar, download the `.glb` file.
+3.  **Add the avatar to the project:** Place the downloaded `.glb` file in the `apps/frontend/public/` directory.
+4.  **Update the avatar path:** In the `apps/frontend/src/components/Avatar.jsx` file, update the path to your new avatar file.
 
-const template = `
-  You are Jack, a world traveler.
-  You will always respond with a JSON array of messages, with a maximum of 3 messages:
-  \n{format_instructions}.
-  Each message has properties for text, facialExpression, and animation.
-  The different facial expressions are: smile, sad, angry, surprised, funnyFace, and default.
-  The different animations are: Idle, TalkingOne, TalkingThree, SadIdle, Defeated, Angry, 
-  Surprised, DismissingGesture and ThoughtfulHeadShake.
-`;
+## Malpractice Detection
 
-const prompt = ChatPromptTemplate.fromMessages([
-  ["ai", template],
-  ["human", "{question}"],
-]);
+The malpractice detection system is designed to ensure the integrity of the interview process by identifying and flagging suspicious behavior. The system uses a combination of computer vision and machine learning technologies to monitor the user's activity during the interview.
 
-const model = new ChatOpenAI({
-  openAIApiKey: process.env.OPENAI_API_KEY || "-",
-  modelName: process.env.OPENAI_MODEL || "davinci",
-  temperature: 0.2,
-});
+### Detected Malpractices
 
-const parser = StructuredOutputParser.fromZodSchema(
-  z.object({
-    messages: z.array(
-      z.object({
-        text: z.string().describe("Text to be spoken by the AI"),
-        facialExpression: z
-          .string()
-          .describe(
-            "Facial expression to be used by the AI. Select from: smile, sad, angry, surprised, funnyFace, and default"
-          ),
-        animation: z
-          .string()
-          .describe(
-            `Animation to be used by the AI. Select from: Idle, TalkingOne, TalkingThree, SadIdle, 
-            Defeated, Angry, Surprised, DismissingGesture, and ThoughtfulHeadShake.`
-          ),
-      })
-    ),
-  })
-);
+*   **Multiple People:** The system can detect the presence of more than one person in the camera's field of view.
+*   **Mobile Phone Usage:** The system can identify when a user is holding or looking at a mobile phone.
+*   **Looking Away:** The system can track the user's gaze and detect when they are looking away from the screen for an extended period.
 
-const openAIChain = prompt.pipe(model).pipe(parser);
+### Technologies Used
 
-export { openAIChain, parser };
+*   **TensorFlow.js:** A library for machine learning in JavaScript, used for object detection and other computer vision tasks.
+*   **face-api.js:** A JavaScript API for face detection and face recognition in the browser.
+*   **MediaPipe:** A cross-platform, customizable machine learning solutions for live and streaming media.
 
-```
+## Getting Started
 
-The code performs four main tasks:
+### Prerequisites
 
-* It sets up the environment using the dotenv library to establish the necessary environment variables for interacting with the OpenAI API.
+*   **Node.js and yarn:** Make sure you have Node.js and yarn installed on your system.
+*   **Python:** The `chatterbox-tts-api` requires Python 3.9 or higher.
+*   **Rhubarb Lip-Sync:** Download the latest version of Rhubarb Lip-Sync from the [official repository](https://github.com/DanielSWolf/rhubarb-lip-sync/releases). Create a `/bin` directory in the `apps/backend` folder and place the contents of the unzipped file there.
+*   **ffmpeg:** Install ffmpeg on your system. You can find instructions for your operating system [here](https://ffmpeg.org/download.html).
 
-* It defines a "prompt" template using the ChatPromptTemplate class from @langchain/core/prompts. This template guides the conversation as a predefined script for the chat.
+### Installation
 
-* It configures the chat model using the ChatOpenAI class, which relies on OpenAI's "davinci" model if the environment variables have not been configured previously.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/asanchezyali/talking-avatar-with-ai.git
+    cd talking-avatar-with-ai
+    ```
+2.  **Install dependencies:**
+    ```bash
+    yarn
+    ```
+3.  **Set up the chatterbox-tts-api:**
+    ```bash
+    cd chatterbox-tts-api
+    pip install -r requirements.txt
+    cd ..
+    ```
+4.  **Create a `.env` file:** In the `apps/backend` directory, create a `.env` file and add the following environment variables:
+    ```
+    # OPENAI
+    OPENAI_MODEL=<YOUR_GPT_MODEL>
+    OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
+    ```
+5.  **Run the application:**
+    ```bash
+    yarn dev
+    ```
+    This will start the frontend and backend servers. The frontend will be available at `http://localhost:5173`.
 
-* It parses the output, designing the response generated by the AI in a specific format that includes details about the facial expression and animation to use, which is crucial for a realistic interaction with Jack.
-  
-* This service integrates with Eleven Labs and Rhubarb Lip-Sync to generate the following client integration interface, where the exchanged data looks something like this:
-```js
-[
-  {
-    text: "I've been to so many places around the world, each with its own unique charm and beauty.",
-    facialExpression: 'smile',
-    animation: 'TalkingOne',
-    audio: '//uQx//uQxAAADG1DHeGEeipZLqI09Jn5AkRGhGiLv9pZ3QRTd3eIR7',
-    lipsync: { metadata: [Object], mouthCues: [Array] }
-  },
-  {
-    text: "There were times when the journey was tough, but the experiences and the people I met along the way made it all worth it.",
-    facialExpression: 'thoughtful',
-    animation: 'TalkingThree',
-    audio: '//uQx//uQxAAADG1DHeGEeipZLqI09Jn5AkRGhGiLv9pZ3QRTd3eIR7',
-    lipsync: { metadata: [Object], mouthCues: [Array] }
-  },  
-{
-    text: :"And there's still so much more to see and explore. The world is a fascinating place!",
-    facialExpression: 'surprised',
-    animation: 'ThoughtfulHeadShake',
-    audio: '//uQx//uQxAAADG1DHeGEeipZLqI09Jn5AkRGhGiLv9pZ3QRTd3eIR7',
-    lipsync: { metadata: [Object], mouthCues: [Array] }
-  }
-]
-```
+## System Architecture
 
-The concept here is to craft a sequence of text accompanied by varied body movements (animations) and diverse facial expressions, aiming to imbue the digital human with a heightened sense of realism in its actions.
-
-## How it Operates
-The system operates through two primary workflows, depending on whether the user input is in text or audio form:
-
-### Workflow with Text Input:
-1. **User Input:** The user enters text.
-2. **Text Processing:** The text is forwarded to the OpenAI GPT API for processing.
-3. **Audio Generation:** The response from GPT is relayed to the Eleven Labs TTS API to generate audio.
-4. **Viseme Generation:** The audio is then sent to Rhubarb Lip Sync to produce viseme metadata.
-5. **Synchronization:** The visemes are utilized to synchronize the digital human's lips with the audio.
-
-### Workflow with Audio Input:
-1. **User Input:** The user submits audio.
-2. **Speech-to-Text Conversion:** The audio is transmitted to the OpenAI Whisper API to convert it into text.
-3. **Text Processing:** The converted text is sent to the OpenAI GPT API for further processing.
-4. **Audio Generation:** The output from GPT is sent to the Eleven Labs TTS API to produce audio.
-5. **Viseme Generation:** The audio is then routed to Rhubarb Lip Sync to generate viseme metadata.
-6. **Synchronization:** The visemes are employed to synchronize the digital human's lips with the audio.
+The following diagram illustrates the architecture of the AI interviewer system:
 
 <div align="center">
   <img src="resources/architecture.drawio.svg" alt="System Architecture" width="100%">
 </div>
-
-## Getting Started
-
-### Requirements
-Before using this system, ensure you have the following prerequisites:
-
-1. **OpenAI Subscription:** You must have an active subscription with OpenAI. If you don't have one, you can create it [here](https://openai.com/product).
-2. **Eleven Labs Subscription:** You need to have a subscription with Eleven Labs. If you don't have one yet, you can
-   sign up [here](https://elevenlabs.io/). 
-It's recommended to have the paid version. With the free version, the avatar doesn't work well due to an error caused by too many requests.
-3. **Rhubarb Lip-Sync:** Download the latest version of Rhubarb Lip-Sync compatible with your operating system from the
-   official [Rhubarb Lip-Sync repository](https://github.com/DanielSWolf/rhubarb-lip-sync/releases). Once downloaded,
-   create a `/bin` directory in the backend and move all the contents of the unzipped `rhubarb-lip-sync.zip` into it.
-   Sometimes, the operating system requests permissions, so you need to enable them.
-4. Install `ffmpeg` for  [Mac OS](https://formulae.brew.sh/formula/ffmpeg), [Linux](https://ffmpeg.org/download.html) or [Windows](https://ffmpeg.org/download.html).
-
-### Installation
-
-1. Clone this repository:
-  
-```bash
-git@github.com:asanchezyali/talking-avatar-with-ai.git
-```
-
-2. Navigate to the project directory:
-
-```bash
-cd digital-human
-```
-
-3. Install dependencies for monorepo:
-```bash
-yarn
-```
-4. Create a .env file in the root `/apps/backend/` of the project and add the following environment variables:
-
-```bash
-# OPENAI
-OPENAI_MODEL=<YOUR_GPT_MODEL>
-OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
-
-# Elevenlabs
-ELEVEN_LABS_API_KEY=<YOUR_ELEVEN_LABS_API_KEY>
-ELVEN_LABS_VOICE_ID=<YOUR_ELEVEN_LABS_VOICE_ID>
-ELEVEN_LABS_MODEL_ID=<YOUR_ELEVEN_LABS_MODEL_ID>
-```
-
-5. Run the development system:
-
-```bash
-yarn dev
-```
-
-6. If you need install another dependence in the monorepo, you can do this:
-
-```bash
-yarn add --dev -W <PACKAGE_NAME>
-yarn
-```
-
-
-Open [http://localhost:5173/](http://localhost:5173/) with your browser to see the result.
-
-## References
-* How ChatGPT, Bard and other LLMs are signaling an evolution for AI digital humans: https://www.digitalhumans.com/blog/how-chatgpt-bard-and-other-llms-are-signaling-an-evolution-for-ai-digital-humans
-* UnneQ Digital Humans: https://www.digitalhumans.com/
-* LLMs: Building a Less Artificial and More Intelligent AI Human: https://www.linkedin.com/pulse/llms-building-less-artificial-more-intelligent-ai-human/
-* Building a digital person design best practices: https://fcatalyst.com/blog/aug2023/building-a-digital-person-design-best-practices
-* Navigating the Era of Digital Humans": An Initial Exploration of a Future Concept: https://www.linkedin.com/pulse/navigating-era-digital-humans-initial-exploration-future-koelmel-eqrje/ 
-* How to Setup Tailwind CSS in React JS with VS Code: https://dev.to/david_bilsonn/how-to-setup-tailwind-css-in-react-js-with-vs-code-59p4 
-* Ex-Human: https://exh.ai/#home
-* Allosaurus: https://github.com/xinjli/allosaurus 
-* Rhubarb Lip-Sync: https://github.com/DanielSWolf/rhubarb-lip-sync
-* Ready Player me - Oculus OVR LipSync: https://docs.readyplayer.me/ready-player-me/api-reference/avatars/morph-targets/oculus-ovr-libsync
-* Ready Player me - Apple Arkit: https://docs.readyplayer.me/ready-player-me/api-reference/avatars/morph-targets/apple-arkit 
-* Mixamo - https://www.mixamo.com/,
-* GLFT -> React Three Fiber - https://gltf.pmnd.rs/)
