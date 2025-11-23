@@ -22,6 +22,7 @@ To create and use your own custom avatar, follow these steps:
 2.  **Download the avatar:** Once you're satisfied with your avatar, download the `.glb` file.
 3.  **Add the avatar to the project:** Place the downloaded `.glb` file in the `apps/frontend/public/` directory.
 4.  **Update the avatar path:** In the `apps/frontend/src/components/Avatar.jsx` file, update the path to your new avatar file.
+5.  <img width="541" height="808" alt="3dimage" src="https://github.com/user-attachments/assets/8ccd5e21-43a6-4deb-9e71-e8c79becd0a1" />
 
 ## Malpractice Detection
 
@@ -32,6 +33,7 @@ The malpractice detection system is designed to ensure the integrity of the inte
 *   **Multiple People:** The system can detect the presence of more than one person in the camera's field of view.
 *   **Mobile Phone Usage:** The system can identify when a user is holding or looking at a mobile phone.
 *   **Looking Away:** The system can track the user's gaze and detect when they are looking away from the screen for an extended period.
+*   ![malpractise](https://github.com/user-attachments/assets/5718d993-cb49-4021-ae60-35385202bd46)
 
 ### Technologies Used
 
